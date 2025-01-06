@@ -4,6 +4,15 @@ import { LoginCredentials, AuthUser } from '../types/auth';
 
 export const authClient = {
   async login(credentials: LoginCredentials): Promise<AuthUser> {
+    if (!appConfig.auth.enabled) {
+      // 認証無効時はダミーユーザーを返す
+      return {
+        username: 'guest',
+        roles: ['user'],
+        token: 'dummy-token'  
+      };
+    }
+
     const response = await axios.post(
       `${appConfig.api.base}/auth/login`,
       credentials
@@ -17,11 +26,17 @@ export const authClient = {
   },
 
   async logout(): Promise<void> {
+    if (!appConfig.auth.enabled) {
+      return;
+    }
     axios.defaults.headers.common['Authorization'] = '';
     localStorage.removeItem('auth');
   },
 
   async checkSession(): Promise<boolean> {
+    if (!appConfig.auth.enabled) {
+      return true;
+    }
     try {
       await axios.get(`${appConfig.api.base}/auth/check`);
       return true;

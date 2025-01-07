@@ -14,7 +14,7 @@ export const authClient = {
     }
 
     const response = await axios.post(
-      `${appConfig.api.base}/auth/login`,
+      `${appConfig.api.target}/auth/login`,
       credentials
     );
     const token = response.data.token;
@@ -38,7 +38,7 @@ export const authClient = {
       return true;
     }
     try {
-      await axios.get(`${appConfig.api.base}/auth/check`);
+      await axios.get(`${appConfig.api.target}/auth/check`);
       return true;
     } catch {
       return false;

@@ -2,8 +2,6 @@ import axios from 'axios';
 import { appConfig } from '../../../foundation/config/appConfig';
 import { StencilConfig, StencilOption } from '../types/stencil';
 
-const API_BASE = `${appConfig.basePath}${appConfig.api.base}`;
-
 export class StencilApiError extends Error {
   constructor(public statusCode: number, message: string) {
     super(message);
@@ -14,7 +12,7 @@ export class StencilApiError extends Error {
 export const stencilClient = {
   async getStencilOptions(categoryId: string): Promise<StencilOption[]> {
     try {
-      const response = await axios.get(`${API_BASE}/api/stencils/${categoryId}`);
+      const response = await axios.get(`${appConfig.api.target}/api/stencils/${categoryId}`);
       return response.data.map((item: any) => ({
         value: item.stencilCd,
         text: item.stencilName
@@ -29,7 +27,7 @@ export const stencilClient = {
 
   async getStencilConfig(stencilCd: string): Promise<StencilConfig> {
     try {
-      const response = await axios.get(`${API_BASE}/api/stencil-config/${stencilCd}`);
+      const response = await axios.get(`${appConfig.api.target}/api/stencil-config/${stencilCd}`);
       return response.data;
     } catch (error: any) {
       throw new StencilApiError(
@@ -41,7 +39,7 @@ export const stencilClient = {
 
   async updateStencilConfig(stencilCd: string, config: Partial<StencilConfig>): Promise<void> {
     try {
-      await axios.put(`${API_BASE}/api/stencil-config/${stencilCd}`, config);
+      await axios.put(`${appConfig.api.target}/api/stencil-config/${stencilCd}`, config);
     } catch (error: any) {
       throw new StencilApiError(
         error.response?.status || 500,
@@ -56,7 +54,7 @@ export const stencilClient = {
     serialNo: string;
   }): Promise<void> {
     try {
-      await axios.post(`${API_BASE}/apps/mste/api/reloadStencilMaster`, {
+      await axios.post(`${appConfig.api.target}/apps/mste/api/reloadStencilMaster`, {
         content: params
       });
     } catch (error: any) {

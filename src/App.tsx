@@ -4,11 +4,15 @@ import { Login } from './foundation/pages/Login';
 import { Home } from './foundation/pages/Home';
 import { routes } from './foundation/config/routes';
 import { appConfig } from './foundation/config/appConfig';
+import React from 'react';
+import { LoadingSpinner } from './foundation/components';
 
 const modules = {
   promarker: () => import('./apps/promarker/pages/ProMarker'),
   apprunner: () => import('./apps/apprunner/pages/AppRunner'),
-};
+} as const;
+
+type ModuleKeys = keyof typeof modules;
 
 export const App: React.FC = () => {
   return (
@@ -21,7 +25,7 @@ export const App: React.FC = () => {
           </AuthGuard>
         } />
         {routes.map(route => {
-          const Component = React.lazy(modules[route.name]);
+          const Component = React.lazy(modules[route.name as ModuleKeys]);
           return (
             <Route
               key={route.name}
